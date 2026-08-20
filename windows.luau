@@ -8,30 +8,53 @@
 --
 -- Clicking any item focuses that window.
 
+local function configNumber(key, fallback)
+	local value = noctalia.getConfig(key)
+
+	if value == nil or value == 0 then
+		return fallback
+	end
+
+	return tonumber(value) or fallback
+end
+
+local function iconSize()
+	return configNumber("icon_size", nil)
+end
+
+local function iconGap()
+	return configNumber("icon_gap", 6)
+end
+
+local function windowGap()
+	return configNumber("window_gap", 6)
+end
+
+local function titleMaxWidth()
+	return configNumber("title_max_width", nil)
+end
+
 local windows = {}
 local requestPending = false
 
 local iconCache = {}
-
-local ICON_SIZE = 18
-local ICON_GAP = 6
-local WINDOW_GAP = 8
-local TITLE_MAX_WIDTH = 260
 
 local function getIcon(appId)
 	if appId == nil or appId == "" then
 		return nil
 	end
 
-	if iconCache[appId] ~= nil then
-		return iconCache[appId]
+	local size = iconSize()
+	local cacheKey = appId .. ":" .. tostring(size or "auto")
+
+	if iconCache[cacheKey] ~= nil then
+		return iconCache[cacheKey]
 	end
 
-	local path = noctalia.appIconPath(appId, ICON_SIZE)
+	local lookupSize = size or 24
+	local path = noctalia.appIconPath(appId, lookupSize)
 
-	-- Cache false as well, so unresolved app IDs do not cause
-	-- an icon-theme scan on every update.
-	iconCache[appId] = path or false
+	iconCache[cacheKey] = path or false
 
 	return path
 end
@@ -82,23 +105,31 @@ end
 
 local function makeIcon(window)
 	local path = getIcon(window.app_id)
+	local size = iconSize()
 
 	if path then
-		return ui.image({
+		local props = {
 			key = "icon-" .. tostring(window.id),
 			path = path,
-			width = ICON_SIZE,
-			height = ICON_SIZE,
 			fit = "contain",
-		})
+		}
+		if size ~= nil then
+			props.width = size
+			props.height = size
+		end
+
+		return ui.image(props)
 	end
 
-	-- Generic fallback if the app_id cannot be resolved to a .desktop icon.
-	return ui.glyph({
+	local props = {
 		key = "icon-" .. tostring(window.id),
 		name = "square",
-		size = ICON_SIZE,
-	})
+	}
+	if size ~= nil then
+		props.size = size
+	end
+
+	return ui.glyph(props)
 end
 
 local function makeWindow(window)
@@ -107,20 +138,24 @@ local function makeWindow(window)
 	}
 
 	if window.is_focused then
-		table.insert(
-			children,
-			ui.label({
-				key = "title-" .. tostring(window.id),
-				text = window.title or window.app_id or "",
-				maxWidth = TITLE_MAX_WIDTH,
-				maxLines = 1,
-			})
-		)
+		local labelProps = {
+			key = "title-" .. tostring(window.id),
+			text = window.title or window.app_id or "",
+			maxLines = 1,
+		}
+
+		local maxWidth = titleMaxWidth()
+
+		if maxWidth ~= nil then
+			labelProps.maxWidth = maxWidth
+		end
+
+		table.insert(children, ui.label(labelProps))
 	end
 
 	return ui.row({
 		key = "window-" .. tostring(window.id),
-		gap = ICON_GAP,
+		gap = iconGap(),
 		align = "center",
 
 		onClick = function()
@@ -139,7 +174,7 @@ local function render()
 	local container = barWidget.isVertical() and ui.column or ui.row
 
 	barWidget.render(container({
-		gap = WINDOW_GAP,
+		gap = windowGap(),
 		align = "center",
 	}, children))
 end

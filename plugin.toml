@@ -1,6 +1,6 @@
 id          = "local/window-strip"
 name        = "Niri Window Strip"
-version     = "0.1.0"
+version     = "0.1.1"
 plugin_api  = 9
 author      = "local"
 description = "Niri windows in column order with the focused window title"
@@ -11,3 +11,39 @@ dependencies = ["niri"]
 [[widget]]
 id    = "windows"
 entry = "windows.luau"
+
+[[widget.setting]]
+key         = "icon_size"
+label_key   = "settings.icon_size.label"
+description_key   = "settings.icon_size.description"
+type        = "int"
+default     = 14
+min         = 0
+max         = 64
+
+[[widget.setting]]
+key         = "icon_gap"
+type        = "int"
+label_key   = "settings.icon_gap.label"
+description_key = "settings.icon_gap.description"
+default     = 6
+min         = 0
+max         = 32
+
+[[widget.setting]]
+key         = "window_gap"
+type        = "int"
+label_key   = "settings.window_gap.label"
+description_key = "settings.window_gap.description"
+default     = 6
+min         = 0
+max         = 32
+
+[[widget.setting]]
+key         = "title_max_width"
+type        = "int"
+label_key   = "settings.title_max_width.label"
+description_key = "settings.title_max_width.description"
+default     = 260
+min         = 0
+max         = 1000

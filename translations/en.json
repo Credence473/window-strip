@@ -1,0 +1,10 @@
+{
+	"settings.icon_size.label": "Icon size",
+	"settings.icon_size.description": "Icon size in pixels. 0 uses automatic sizing.",
+	"settings.icon_gap.label": "Icon/title gap",
+	"settings.icon_gap.description": "Space between the focused window icon and title.",
+	"settings.window_gap.label": "Window gap",
+	"settings.window_gap.description": "Space between window entries.",
+	"settings.title_max_width.label": "Maximum title width",
+	"settings.title_max_width.description": "Maximum width of the focused window title. 0 means automatic."
+}
