@@ -19,7 +19,7 @@ local function configNumber(key, fallback)
 end
 
 local function iconSize()
-	return configNumber("icon_size", nil)
+	return configNumber("icon_size", 14)
 end
 
 local function iconGap()
