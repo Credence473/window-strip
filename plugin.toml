@@ -1,0 +1,13 @@
+id          = "local/window-strip"
+name        = "Niri Window Strip"
+version     = "0.1.0"
+plugin_api  = 9
+author      = "local"
+description = "Niri windows in column order with the focused window title"
+icon        = "layout-columns"
+
+dependencies = ["niri"]
+
+[[widget]]
+id    = "windows"
+entry = "windows.luau"
