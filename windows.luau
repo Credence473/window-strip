@@ -23,11 +23,11 @@ local function iconSize()
 end
 
 local function iconGap()
-	return configNumber("icon_gap", 6)
+	return configNumber("icon_gap", 2)
 end
 
 local function windowGap()
-	return configNumber("window_gap", 6)
+	return configNumber("window_gap", 8)
 end
 
 local function titleMaxWidth()
